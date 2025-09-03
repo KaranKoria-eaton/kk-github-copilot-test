@@ -18,7 +18,45 @@ app = FastAPI(title="Mergington High School API",
 current_dir = Path(__file__).parent
 app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
           "static")), name="static")
-
+        # Add more activities
+        activities.update({
+            "Basketball Team": {
+                "description": "Join the school basketball team and compete in local leagues",
+                "schedule": "Wednesdays, 4:00 PM - 6:00 PM",
+                "max_participants": 15,
+                "participants": []
+            },
+            "Swimming Club": {
+                "description": "Practice swimming techniques and participate in meets",
+                "schedule": "Mondays, 5:00 PM - 6:30 PM",
+                "max_participants": 20,
+                "participants": []
+            },
+            "Drama Club": {
+                "description": "Act, direct, and produce plays and performances",
+                "schedule": "Thursdays, 3:30 PM - 5:30 PM",
+                "max_participants": 25,
+                "participants": []
+            },
+            "Art Workshop": {
+                "description": "Explore painting, drawing, and sculpture in a creative environment",
+                "schedule": "Fridays, 4:00 PM - 5:30 PM",
+                "max_participants": 18,
+                "participants": []
+            },
+            "Debate Team": {
+                "description": "Develop argumentation skills and compete in debate tournaments",
+                "schedule": "Tuesdays, 4:00 PM - 5:30 PM",
+                "max_participants": 10,
+                "participants": []
+            },
+            "Math Olympiad": {
+                "description": "Prepare for and participate in math competitions",
+                "schedule": "Saturdays, 10:00 AM - 12:00 PM",
+                "max_participants": 12,
+                "participants": []
+            }
+        })
 # In-memory activity database
 activities = {
     "Chess Club": {
@@ -62,6 +100,9 @@ def signup_for_activity(activity_name: str, email: str):
     # Get the specific activity
     activity = activities[activity_name]
 
+    # Check if already signed up
+    if email in activity["participants"]:
+        raise HTTPException(status_code=400, detail="Already signed up for this activity")  
     # Add student
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
